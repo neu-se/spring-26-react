@@ -10,8 +10,9 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "test": "vitest run --coverage",
-    "dev": "node --watch ./src/server.ts",
-    "build": "echo 'nothing to do to build, run `npm start`'",
+    "dev": "echo 'Run `npm run dev:server` and `npm run dev:frontend` separately",
+    "dev:server": "node --watch ./src/server.ts",
+    "build": "tsc -p frontend/tsconfig.json --noEmit && vite build frontend",
     "start": "MODE=production node ./src/server.ts"
   },
   "author": "Rob Simmons",
