@@ -33,34 +33,39 @@ very different.
 ### Production Mode
 
 Production mode is simpler: there's one server running, the Express server, on
-port 8000. When when a GET request doesn't match any API endpoints, the
-Express server looks in `./frontend/dist` to see if there's a file it can
-server there. Files are put in that directory when `npm run build` calls the
-`vite build` command. This build process is necessary because we're writing
-our frontend code in TypeScript, but browsers can't do type stripping like
-Node can — we have to do some transformation on the code we're writing to make
-it browser-friendly. (Vite is doing a bunch of other transformations for other
-reasons.)
+port 3000, accessible via the url <http://localhost:3000>. When when a GET
+request doesn't match any API endpoints, the Express server looks in
+`./frontend/dist` to see if there's a file it can server there. Files are put
+in that directory when `npm run build` calls the `vite build` command. This
+build process is necessary because we're writing our frontend code in
+TypeScript, but browsers can't do type stripping like Node can — we have to do
+some transformation on the code we're writing to make it browser-friendly.
+(Vite is doing a bunch of other transformations for other reasons.)
 
 ### Development Mode
 
 Development mode is a little trickier, because we want our browser to be
 connecting to Vite's "development web server", not Express, because Vite does
 a lot of nifty stuff to make sure that when we change our TypeScript code, it
-**reloads the web page**. That is very very handy for frontend web
-development.
+**reloads the web page**. That is _very_ handy for frontend web development.
 
 However, this means your "frontend code" — the HTML and JS that the browser is
-supposed to run, needs to run separately from your "backend code" — the TS
-Express server that Node is supposed to run. If you have these two things on
-different ports, you're going to run into annoying problems with something
-called CORS. In production mode, your entire website is coming from one
-server, and you really want your website look like it's _all_ coming from a
-single server during development too.
+supposed to run being served by the Vite development web server — is coming
+from a different server than the Express server running in React. The default
+convention is that Vite development web server is accessed via
+<http://localhost:5173>, and the Express API server is accessible via
+<http://localhost:3000>. If you try to have a website that is being served
+from a different port than the API service its using, you're going to have to
+gain a nightmarish amount of literacy with
+[CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS). This
+wasn't a problem in production mode: your entire website is coming from the
+Express server server. You really want your website look like it's _all_
+coming from a single server during development too.
 
-To handle this, in development mode the server will _only_ respond to API
-requests, and the Vite development server forwards all API requests to the
-Express server. This is called "proxying".
+The easy way to do this is to have the development server _only_ respond to
+API requests, and have the Vite development server forwards all API requests
+to the Express server. This is called "proxying", and it means that you can
+access a complete Vite server from <http://localhost:5173>.
 
 ### Express API
 

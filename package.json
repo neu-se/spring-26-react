@@ -11,6 +11,7 @@
     "prettier:fix": "prettier --write .",
     "test": "vitest run --coverage",
     "dev": "echo 'Run `npm run dev:server` and `npm run dev:frontend` separately",
+    "dev:frontend": "vite frontend",
     "dev:server": "node --watch ./src/server.ts",
     "build": "tsc -p frontend/tsconfig.json --noEmit && vite build frontend",
     "start": "MODE=production node ./src/server.ts"
