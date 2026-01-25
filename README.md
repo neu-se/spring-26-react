@@ -37,6 +37,36 @@ The Express server's API has the following endpoints:
 
 ## Base configuration
 
+The base project configuration follows a philosophy of "minimalism, mostly."
+Project configuration should be minimal and have a bias towards implicit
+defaults. Deviations from this principle should be justified and documented
+(here or elsewhere).
+
+Notable exceptions to this principle:
+
+- `.gitignore` takes a kitchen-sink approach and should freely accept
+  additions (for example, if a student accidentally checks in a file that
+  could have been ignored)
+- The ESLint configuration is a maximalist attempt at keeping new TypeScript
+  programmers on the rails in a complicated codebase, and also giving them a
+  sense of working inside style conventions of a project that may differ from
+  their own.
+
+  (Rob has told students we banned `i++` with `noPlusPlus` just to give them
+  the experience of being annoyed by the style guide of a company they're
+  working for. He may or may not have been kidding.)
+
+- If we can have all project variants using the _exact_ same `tsconfig.json`
+  file or `eslint.config.mjs` file by adding a bit of cruft to the base
+  configuration, that's a reasonable trade. Things are going to inevitably get
+  copy-pasted, and so the fewer copies of configuration files there are, the
+  better.
+
+  This is why `tsconfig.json` ignores the `./frontend` and `./client`
+  directories right off the bat and why `eslint.config.mjs` includes React's
+  Rules of Hooks despite most of the project variants not including any React
+  code.
+
 ### NPM Scripts
 
 This sets up a set of commands that CS4530 templates should consistently
@@ -52,41 +82,39 @@ support:
 - `npm run build` prepares the project for production-style deployment
 - `npm start` runs the project in production style
 
+These are tested by github actions in `.github/workflows/main.yml`.
+
 ### ESLint
 
 This base project has an opinionated ESLint configuration that relies on
 [typed linting](https://typescript-eslint.io/getting-started/typed-linting).
+The ESLint configuration makes some assumptions about project structure:
 
-- Frontend code is code that lives in `./frontend` or `./client`. This code
-  supports a few different naming conventions, as suitable for React.
+- Frontend code is code that lives in `./frontend` or `./client`, and uses
+  React and JSX. (This code is subject to different linter rules.)
 - Test code lives in a `**/tests` directory OR has a `*.spec.ts(x)` or a
   `*.test.ts(x)` filename. Tests can use devDependencies, unlike other code.
 - Config files all have `*.config.mjs` filenames (vite, vitest, playwright,
   and eslint all follow this convention) and can import devDependencies,
   unlike other code. (Note that this means we're not using TypeScript to check
   our config files.)
-- Most everything except for `no-console` and `prettier` should registered as
-  `error`; it's distracting in practice to have these be red squigglies
-
-### Minimalism, Mostly
-
-Project configuration should be minimal, and deviations from this principle
-should be justified and ideally documented. Notable exceptions are:
-
-- `.gitignore`, which takes a kitchen-sink approach and should freely accept
-  additions (for example, if a student accidentally checks in a file that
-  could have been ignored)
-- The ESLint configuration, which is a maximalist approach at trying to keep
-  new TypeScript programmers on the rails in a complicated codebase, and also
-  giving them a sense of working inside style conventions of a project that
-  may differ from their own. (Rob has told students we banned `i++` with the
-  `noPlusPlus` just to give them the experience of being annoyed by the style
-  guide of a company they're working for. He may or may not have been
-  kidding.)
+- Most everything should be registered as `error`. Warnings don't fail CI
+  checks. Exceptions should have a documented reason. Notable exceptions:
+  - `no-console` is `warn` because no-console regularly gets turned off by
+    line or file specific rules: we want to discourage excessive `no-console`
+    use but it is more like the admonition to not check in commented-out code:
+    it's mostly a problem when done excessively and it's easy to check in
+    visual inspection
+  - `prettier` is `warn` because red squigglies for `prettier` are especially
+    distracting and we can check for prettier failures in CI separately
+  - `import/extensions` is `warn` because the rule was added entirely a matter
+    of consistency, not correctness. Extensions are required in non-frontend
+    projects because of the type-stripping setup; adding them to Vite-managed
+    frontend code keeps the codebase more consistent.
 
 ### TypeScript
 
-TypeScript in the project is configured with options that support
+TypeScript is configured with options that support
 [type stripping](https://nodejs.org/api/typescript.html#type-stripping).
 Beyond this, on top of regular strict settings, the TypeScript configuration
 enables:
@@ -99,7 +127,7 @@ enables:
 
 ### Prettier
 
-Includes a `.prettierrc` file with some reasonable settings and a
+The `.prettierrc` file is intended to use some reasonable defaults, and a
 `.vscode/settings.json` file sets javascript, typescript, and json files to
 use the prettier editor as the default.
 
