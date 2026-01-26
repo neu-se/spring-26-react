@@ -20,14 +20,10 @@ export default function AddGrade({ visible }: AddGradeProps) {
         onSubmit={(ev) => {
           ev.preventDefault();
           addGrade(password, studentID, courseName, courseGrade)
-            .then((res) => {
-              if ("error" in res) {
-                setFeedback(`Error: ${res.error}`);
-              } else {
-                setFeedback(`Added grade of ${courseGrade} in ${courseName} successfully`);
-              }
-            })
-            .catch((err) => setFeedback(`Unexpected error ${err}`));
+            .then((res) =>
+              setFeedback(`Added grade of ${courseGrade} in ${courseName} successfully`),
+            )
+            .catch((err) => setFeedback(`${err}`));
         }}
       >
         <label htmlFor="studentIdForAddGrade">Student ID:</label>
