@@ -18,14 +18,10 @@ export default function AddStudent({ visible }: AddStudentProps) {
         onSubmit={(ev) => {
           ev.preventDefault();
           addStudent(password, name)
-            .then((res) => {
-              if ("error" in res) {
-                setFeedback(`Error: ${res.error}`);
-              } else {
-                setFeedback(`Record created for student '${name}' with ID ${res.studentID}`);
-              }
-            })
-            .catch((err) => setFeedback(`Unexpected error ${err}`));
+            .then((res) =>
+              setFeedback(`Record created for student '${name}' with ID ${res.studentID}`),
+            )
+            .catch((err) => setFeedback(`${err}`));
         }}
       >
         <label htmlFor="studentName">Enter new student's name:</label>

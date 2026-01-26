@@ -47,7 +47,7 @@ export default function LookupTranscript({ visible }: LookupTranscriptProps) {
       <div className="feedback">
         {feedback &&
           ("error" in feedback ? (
-            `Error: ${feedback.error}`
+            `${feedback.error}`
           ) : !feedback.success ? (
             `No student exists with id ${studentID}`
           ) : (
