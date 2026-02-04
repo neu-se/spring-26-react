@@ -13,7 +13,7 @@ https://github.com/neu-se/spring-26-base
 v add an Express server and API tests
 https://github.com/neu-se/spring-26-express
 | |
-| |-> Clock server (support code for react lectures): 
+| |-> Clock server (support code for react lectures):
 |     https://github.com/neu-se/spring-26-websocket-clock
 |
 v add a Vite frontend for a simple client/server setup
