@@ -122,6 +122,7 @@ shared/package-lock.json
 
 # Stryker
 .stryker-tmp/
+reports/
 
 # Playwright artifacts
 playwright-report/
@@ -132,5 +133,4 @@ test-results/
 
 # misc
 client/build
-server/reports
 .DS_Store

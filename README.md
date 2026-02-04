@@ -6,11 +6,15 @@ It is part of a tree of template projects:
 ```
 Base configuration:
 https://github.com/neu-se/spring-26-base
-|
+| |
+| |-> Traffic light (activity for code design principles lecture):
+|     https://github.com/neu-se/spring-26-traffic-light-activity
 |
 v add an Express server and API tests
 https://github.com/neu-se/spring-26-express
-|
+| |
+| |-> Clock server (support code for react lectures):
+|     https://github.com/neu-se/spring-26-websocket-clock
 |
 v add a Vite frontend for a simple client/server setup
 https://github.com/neu-se/spring-26-vite
