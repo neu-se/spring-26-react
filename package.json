@@ -36,7 +36,6 @@
     "vitest": "^4.0.17"
   },
   "dependencies": {
-    "express": "^5.2.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "zod": "^4.3.6"
