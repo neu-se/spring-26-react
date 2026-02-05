@@ -12,7 +12,7 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "test": "npm-run-all test:*",
-    "test:frontend": "playwright test",
+    "test:frontend": "npx playwright test",
     "test:server": "vitest run --coverage",
     "dev": "echo \"Run \\`npm run dev:server\\` and \\`npm run dev:frontend\\` separately\\n\"",
     "dev:frontend": "vite frontend",
