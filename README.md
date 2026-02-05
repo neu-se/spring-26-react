@@ -24,10 +24,6 @@ Notable exceptions to this principle:
   sense of working inside style conventions of a project that may differ from
   their own.
 
-  (Rob has told students we banned `i++` with `noPlusPlus` just to give them
-  the experience of being annoyed by the style guide of a company they're
-  working for. He was only sort of kidding.)
-
 - If we can have all project variants using the _exact_ same `tsconfig.json`
   file or `eslint.config.mjs` file by adding a bit of cruft to the base
   configuration, that's a reasonable trade. Things are going to inevitably get
@@ -82,10 +78,6 @@ The ESLint configuration makes some assumptions about project structure:
     visual inspection
   - `prettier` is `warn` because red squigglies for `prettier` are especially
     distracting and we can check for prettier failures in CI separately
-  - `import/extensions` is `warn` because the rule was added entirely a matter
-    of consistency, not correctness. Extensions are required in non-frontend
-    projects because of the type-stripping setup; adding them to Vite-managed
-    frontend code keeps the codebase more consistent.
 
 ### TypeScript
 
