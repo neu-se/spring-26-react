@@ -2,16 +2,10 @@
 
 This is a template project for CS4530, Software Engineering at Northeastern.
 
-## Vite+Express configuration
+## Vite React configuration
 
-This project has two parts:
-
-1.  A minimal Express transcript API for a very simple transcript server
-2.  A Vite frontend with code that calls that server (this lives in the
-    `./frontend` directory)
-
-The way this project runs in "production mode" versus "development mode" is
-very different.
+This project is a React Vite transcript application that stores information in
+the browser.
 
 ### Production Mode
 
