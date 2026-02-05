@@ -1,28 +1,6 @@
 # CS4530 Template Project
 
 This is a template project for CS4530, Software Engineering at Northeastern.
-It is part of a tree of template projects:
-
-```
-Base configuration:
-https://github.com/neu-se/spring-26-base
-|
-|
-v add an Express server and API tests
-https://github.com/neu-se/spring-26-express
-|
-|
-v add a Vite frontend for a simple client/server setup
-https://github.com/neu-se/spring-26-vite
-|
-|
-v add React to the frontend
-https://github.com/neu-se/spring-26-fullstack
-|
-|
-v remove backend (React frontend project only)
-https://github.com/neu-se/spring-26-react
-```
 
 ## Vite+Express configuration
 
@@ -190,3 +168,32 @@ html files even if a students' global configuration uses other defaults.
 The `.prettierrc`, `.gitattributes`, and `.vscode/settings.json` files
 conspire to generally force projects to use `\n` file endings instead of
 Windows-style `\r\n` line endings (LF instead of CRLF).
+
+## Project Tree
+
+This project is part of a tree of template projects:
+
+```
+Base configuration:
+https://github.com/neu-se/spring-26-base
+| |
+| |-> Traffic light (activity for code design principles lecture):
+|     https://github.com/neu-se/spring-26-traffic-light-activity
+|
+v add an Express server and API tests
+https://github.com/neu-se/spring-26-express
+| |
+| |-> Clock server (support code for react lectures):
+|     https://github.com/neu-se/spring-26-websocket-clock
+|
+v add a Vite frontend for a simple client/server setup
+https://github.com/neu-se/spring-26-vite
+|
+|
+v add React to the frontend
+https://github.com/neu-se/spring-26-fullstack
+|
+|
+v remove backend (React frontend project only)
+https://github.com/neu-se/spring-26-react
+```
