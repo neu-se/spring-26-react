@@ -184,8 +184,10 @@ https://github.com/neu-se/spring-26-vite
 |
 v add React to the frontend
 https://github.com/neu-se/spring-26-fullstack
+| |
+| |-> Remove backend for a React frontend-only project
+|     https://github.com/neu-se/spring-26-react
 |
-|
-v remove backend (React frontend project only)
-https://github.com/neu-se/spring-26-react
+v use NPM workspaces to facilitate type and validator sharing
+https://github.com/neu-se/spring-26-workspaces
 ```

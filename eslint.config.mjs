@@ -6,51 +6,6 @@ import eslintPluginImport from "eslint-plugin-import";
 import reactHooks from "eslint-plugin-react-hooks";
 import { reactRefresh } from "eslint-plugin-react-refresh";
 
-/**
- * We want @typescript-eslint/naming-convention to enforce different naming
- * naming conventions in React frontend code (which lives in the ./frontend or
- * ./client directory) and backend/other code. These are common naming
- * conventions between the two.
- */
-const commonNamingConventions = [
-  {
-    // Variables are camelCase: `nimGameService`, `row`
-    selector: ["variable"],
-    format: ["camelCase"],
-    leadingUnderscore: "allow",
-  },
-  {
-    // Functions, methods, and members are too: `allGuessed`, `start`, `viewAs`, `isDone`
-    selector: ["function", "method", "memberLike"],
-    format: ["camelCase"],
-  },
-  {
-    // Types and class names are PascalCase: `GameService`, `NimState`
-    selector: "typeLike",
-    format: ["PascalCase"],
-  },
-  {
-    // Global constants are UPPER_CASE: `PORT`, `THREAD_API_URL`
-    selector: "variable",
-    modifiers: ["global", "const"],
-    types: ["boolean", "number", "string", "array"],
-    format: ["UPPER_CASE"],
-  },
-  {
-    // Private methods and fields must have a leading underscore: this._count
-    selector: ["memberLike", "method"],
-    modifiers: ["private"],
-    format: ["camelCase"],
-    leadingUnderscore: "require",
-  },
-  {
-    // No limits on things like 'Content-Type' in a fetch object
-    selector: "objectLiteralProperty",
-    modifiers: ["requiresQuotes"],
-    format: null,
-  },
-];
-
 export default defineConfig([
   globalIgnores([
     "**/build", // legacy output directory
@@ -103,15 +58,50 @@ export default defineConfig([
     rules: {
       "@typescript-eslint/naming-convention": [
         "error",
-        ...commonNamingConventions,
         {
-          // Keyv repository models are more like classes with static methods
-          // than other constants, so this rule makes them PascalCase
-          // (`GameRepo`) instead of the default camelCase.
-          selector: "variable",
-          modifiers: ["global"],
-          filter: { regex: "Repo$", match: true },
+          // Variables are camelCase: `nimGameService`, `row`
+          selector: ["variable"],
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+        },
+        {
+          // Functions, methods, and members are too: `allGuessed`, `start`, `viewAs`, `isDone`
+          selector: ["function", "method", "memberLike"],
+          format: ["camelCase"],
+        },
+        {
+          // Types and class names are PascalCase: `GameService`, `NimState`
+          selector: "typeLike",
           format: ["PascalCase"],
+        },
+        {
+          // Global constants are UPPER_CASE: `PORT`, `THREAD_API_URL`
+          selector: "variable",
+          modifiers: ["global", "const"],
+          types: ["boolean", "number", "string", "array"],
+          format: ["UPPER_CASE"],
+        },
+        {
+          // Private methods and fields must have a leading underscore: this._count
+          selector: ["memberLike", "method"],
+          modifiers: ["private"],
+          format: ["camelCase"],
+          leadingUnderscore: "require",
+        },
+        {
+          // No limits on things like 'Content-Type' in a fetch object
+          selector: "objectLiteralProperty",
+          modifiers: ["requiresQuotes"],
+          format: null,
+        },
+        {
+          // Usually we want to stick with camelCase for global variables, but
+          // some global items want to be PascalCase: `FooModel` in the server,
+          // `AuthContext` and `ThreadPage` in the frontend, `MockGameServer`
+          // in certain tests.
+          selector: ["function", "variable"],
+          modifiers: ["global"],
+          format: ["camelCase", "PascalCase"],
         },
       ],
       "@typescript-eslint/no-unused-vars": [
@@ -134,19 +124,6 @@ export default defineConfig([
   {
     files: ["{client,frontend}/**/*.{ts,tsx}"],
     extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.recommended],
-    rules: {
-      "@typescript-eslint/naming-convention": [
-        "error",
-        ...commonNamingConventions,
-        {
-          // React components want to be PascalCase: `AuthContext`, `ThreadPage`
-          // Therefore, the camelCase-only restriction is relaxed for globals.
-          selector: ["function", "variable"],
-          modifiers: ["global"],
-          format: ["camelCase", "PascalCase"],
-        },
-      ],
-    },
   },
   {
     // Test files may need to make use of the `any` type in a way we want to
