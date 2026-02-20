@@ -27,6 +27,16 @@ export default function App() {
               {row.map((col, colNum) => (
                 <td key={colNum}>
                   <button
+                    style={{
+                      backgroundColor:
+                        colNum === 0 && rowNum === 0
+                          ? `oklch(0.8618 0.08281250000000001 20)`
+                          : colNum === 0
+                            ? `oklch(0.8418 0.08281250000000001 180)`
+                            : rowNum === 0
+                              ? `oklch(0.8506 0.08281250000000001 250)`
+                              : `oklch(0.8613 0.08281250000000001 320)`,
+                    }}
                     disabled={!col}
                     onClick={() => {
                       if (grid[rowNum + 1][colNum] || grid[rowNum][colNum + 1]) return;
