@@ -35,4 +35,4 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright end-to-end tests
-        run: npm run test:frontend
+        run: npm run test
