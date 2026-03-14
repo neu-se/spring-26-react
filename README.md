@@ -23,6 +23,7 @@ Notable exceptions to this principle:
 - `.gitignore` takes a kitchen-sink approach and should freely accept
   additions. (For example, if a student accidentally checks in a file that
   could have been ignored, it makes sense to add that file here.)
+
 - The ESLint configuration is a maximalist attempt at keeping new TypeScript
   programmers on the rails in a complicated codebase, and also giving them a
   sense of working inside style conventions of a project that may differ from
