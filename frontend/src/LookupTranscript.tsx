@@ -1,25 +1,14 @@
 import { useState } from "react";
-import { usePasswordContext } from "./PasswordContext.ts";
-import { getTranscript } from "./service.ts";
+import { getTranscript, type Transcript } from "./service.ts";
 
 interface LookupTranscriptProps {
   visible: boolean;
 }
 export default function LookupTranscript({ visible }: LookupTranscriptProps) {
   const [feedback, setFeedback] = useState<
-    | null
-    | { error: string }
-    | { success: false }
-    | {
-        success: true;
-        transcript: {
-          student: { studentID: number; studentName: string };
-          grades: { course: string; grade: number }[];
-        };
-      }
+    null | { error: string } | { success: false } | { success: true; transcript: Transcript }
   >(null);
   const [studentID, setStudentID] = useState("");
-  const password = usePasswordContext();
 
   if (!visible) return null;
   return (
@@ -27,9 +16,12 @@ export default function LookupTranscript({ visible }: LookupTranscriptProps) {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          getTranscript(password, studentID)
-            .then((res) => setFeedback(res))
-            .catch((err) => setFeedback({ error: `${err}` }));
+          try {
+            const res = getTranscript(studentID);
+            setFeedback(res);
+          } catch (err) {
+            setFeedback({ error: `${err}` });
+          }
         }}
       >
         <label htmlFor="idToView">Enter student id to view:</label>

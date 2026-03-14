@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { addGrade } from "./service.ts";
-import { usePasswordContext } from "./PasswordContext.ts";
 
 interface AddGradeProps {
   visible: boolean;
@@ -11,7 +10,6 @@ export default function AddGrade({ visible }: AddGradeProps) {
   const [studentID, setStudentID] = useState("");
   const [courseName, setCourseName] = useState("");
   const [courseGrade, setCourseGrade] = useState("");
-  const password = usePasswordContext();
 
   if (!visible) return null;
   return (
@@ -19,11 +17,12 @@ export default function AddGrade({ visible }: AddGradeProps) {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          addGrade(password, studentID, courseName, courseGrade)
-            .then((res) =>
-              setFeedback(`Added grade of ${courseGrade} in ${courseName} successfully`),
-            )
-            .catch((err) => setFeedback(`${err}`));
+          try {
+            addGrade(studentID, courseName, courseGrade);
+            setFeedback(`Added grade of ${courseGrade} in ${courseName} successfully`);
+          } catch (err) {
+            setFeedback(`${err}`);
+          }
         }}
       >
         <label htmlFor="studentIdForAddGrade">Student ID:</label>

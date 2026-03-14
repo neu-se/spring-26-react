@@ -6,9 +6,50 @@ export class ServiceError extends Error {
   }
 }
 
-const zError = z.object({ error: z.string() });
+const zStudent = z.object({ studentID: z.int(), studentName: z.string() });
+export type Student = z.infer<typeof zStudent>;
+const zCourseGrade = z.object({ course: z.string(), grade: z.number() });
+export type CourseGrade = z.infer<typeof zCourseGrade>;
+const zTranscript = z.object({
+  student: zStudent,
+  grades: z.array(zCourseGrade),
+});
+export type Transcript = z.infer<typeof zTranscript>;
+const zTranscriptStore = z.object({
+  lastId: z.int().gte(0),
+  transcripts: z.array(zTranscript),
+});
+type TranscriptStore = z.infer<typeof zTranscriptStore>;
 
-const zAddStudentResponse = z.object({ studentID: z.int() });
+/**
+ * Calls a function that imperatively updates a transcript, and uses that
+ * function to update the localstorage-stored transcript.
+ */
+function updateStoredTranscript<T>(update: (old: TranscriptStore) => T): T {
+  const str = localStorage.getItem("transcripts") || `{"lastId":0,"transcripts": []}`;
+  const transcript = zTranscriptStore.parse(JSON.parse(str));
+  const returnValue = update(transcript);
+  localStorage.setItem("transcripts", JSON.stringify(transcript));
+  return returnValue;
+}
+
+/**
+ * Returns the index of the transcript for a given student ID in the
+ * transcript store. If this function returns successfully, the id can be
+ * assumed to be a valid student ID.
+ *
+ * @param id - the id to look up
+ * @returns the index of this transcript for this student ID in the `_transcripts` array
+ * @throws if the there is no transcript with the given student ID
+ */
+function getIndexForId({ transcripts }: TranscriptStore, id: number): number {
+  const index: number = transcripts.findIndex((t) => t.student.studentID === id);
+  if (index === -1) {
+    throw new ServiceError(`Transcript not found for student with ID ${id}`);
+  }
+  return index;
+}
+
 /**
  * Validate inputs and call the `addStudent` api
  *
@@ -17,42 +58,24 @@ const zAddStudentResponse = z.object({ studentID: z.int() });
  * @returns successful API response
  * @throws if validation fails or there is an API response error
  */
-export async function addStudent(
-  password: string,
-  studentName: string,
-): Promise<z.infer<typeof zAddStudentResponse>> {
-  if (studentName === "") throw new ServiceError("Student name must be non-empty");
-
-  const response = await fetch("/api/addStudent", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      password,
-      studentName,
-    }),
+export function addStudent(studentName: string) {
+  return updateStoredTranscript((transcriptStore) => {
+    const studentID = transcriptStore.lastId + 1;
+    transcriptStore.lastId = studentID;
+    transcriptStore.transcripts.push({ student: { studentID, studentName }, grades: [] });
+    return { studentID };
   });
-  const data = z.union([zError, zAddStudentResponse]).parse(await response.json());
-  if ("error" in data) throw new ServiceError(data.error);
-  return data;
 }
 
-const zAddGradeResponse = z.object({ success: z.literal(true) });
 /**
  * Validate inputs and call the `addGrade` api
  *
- * @param password - credentials
  * @param studentIDStr - student ID (error if not a positive integer)
  * @param courseName - student name
  * @param courseGradeStr - course grade (error if not a number between 0 and 100, inclusive)
- * @returns successful API response
- * @throws if validation fails or there is an API response error
+ * @throws if validation fails or the student ID is invalid
  */
-export async function addGrade(
-  password: string,
-  studentIDStr: string,
-  courseName: string,
-  courseGradeStr: string,
-): Promise<z.infer<typeof zAddGradeResponse>> {
+export function addGrade(studentIDStr: string, courseName: string, courseGradeStr: string) {
   const studentID = parseInt(studentIDStr);
   if (isNaN(studentID) || `${studentID}` !== studentIDStr || studentID < 0) {
     throw new ServiceError("Student ID is invalid");
@@ -72,58 +95,33 @@ export async function addGrade(
     throw new ServiceError("Course name is required");
   }
 
-  const response = await fetch("/api/addGrade", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      password,
-      studentID,
-      courseName,
-      courseGrade,
-    }),
+  return updateStoredTranscript((transcriptStore) => {
+    const index = getIndexForId(transcriptStore, studentID);
+    transcriptStore.transcripts[index].grades.push({ course: courseName, grade: courseGrade });
+    return { success: true };
   });
-  const data = z.union([zError, zAddGradeResponse]).parse(await response.json());
-  if ("error" in data) throw new ServiceError(data.error);
-  return data;
 }
-
-const zGetTranscriptResponse = z.union([
-  z.object({ success: z.literal(false) }),
-  z.object({
-    success: z.literal(true),
-    transcript: z.object({
-      student: z.object({ studentID: z.int(), studentName: z.string() }),
-      grades: z.array(z.object({ course: z.string(), grade: z.number() })),
-    }),
-  }),
-]);
 
 /**
  * Validate inputs and call the `getTranscript` API
  *
- * @param password - credentials
  * @param studentIDStr - student ID (error if not a positive integer)
- * @returns successful API response
- * @throws if validation fails or there is an API response error
+ * @throws if validation fails or the student ID is invalid
  */
-export async function getTranscript(
-  password: string,
+export function getTranscript(
   studentIDStr: string,
-): Promise<z.infer<typeof zGetTranscriptResponse>> {
+): { success: false } | { success: true; transcript: Transcript } {
   const studentID = parseInt(studentIDStr);
   if (isNaN(studentID) || `${studentID}` !== studentIDStr || studentID < 0) {
     throw new ServiceError("Student ID is invalid");
   }
 
-  const response = await fetch("/api/getTranscript", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      password,
-      studentID,
-    }),
+  return updateStoredTranscript((transcriptStore) => {
+    try {
+      const index = getIndexForId(transcriptStore, studentID);
+      return { success: true, transcript: transcriptStore.transcripts[index] };
+    } catch {
+      return { success: false };
+    }
   });
-  const data = z.union([zError, zGetTranscriptResponse]).parse(await response.json());
-  if ("error" in data) throw new ServiceError(data.error);
-  return data;
 }

@@ -22,24 +22,12 @@ export default defineConfig({
   // Just test with chrome
   projects: [{ name: "chromium", use: devices["Desktop Chrome"] }],
 
-  // This sets up the two-server development environment that we recommend,
-  // the Vite frontend server that the tests will connect to, and the Express
-  // server that serves API requests. The `reuseExistingServer` option means
-  // that, if you already have your development environment running, tests
-  // will just operate on that running server instead of starting a new
-  // server.
   webServer: [
     {
       name: "Frontend",
-      command: "npm run dev:frontend",
+      command: "npm run dev",
       reuseExistingServer: !process.env.CI,
       url: "http://localhost:5173",
-    },
-    {
-      name: "Server",
-      command: "npm run dev:server",
-      reuseExistingServer: !process.env.CI,
-      url: "http://localhost:3000",
-    },
+    }
   ],
 });

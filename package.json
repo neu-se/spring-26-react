@@ -9,9 +9,9 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "test": "vitest run --config frontend/vite.config.mjs --coverage",
+    "test": "playwright test",
     "dev": "vite frontend",
-    "build": "tsc -p frontend/tsconfig.json && vite build frontend",
+    "build": "tsc -p frontend/tsconfig.json --noEmit && vite build frontend",
     "start": "vite preview frontend",
     "playwright": "playwright test --ui"
   },
@@ -22,7 +22,7 @@
     "@types/express": "^5.0.6",
     "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2",
+    "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "^4.0.18",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -35,7 +35,7 @@
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
-    "vite": "^7.3.1",
+    "vite": "^8.0.0",
     "vitest": "^4.0.17"
   },
   "dependencies": {

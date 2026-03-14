@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { addStudent } from "./service.ts";
-import { usePasswordContext } from "./PasswordContext.ts";
 
 interface AddStudentProps {
   visible: boolean;
@@ -9,7 +8,6 @@ interface AddStudentProps {
 export default function AddStudent({ visible }: AddStudentProps) {
   const [feedback, setFeedback] = useState<null | string>(null);
   const [name, setName] = useState<string>("");
-  const password = usePasswordContext();
 
   if (!visible) return null;
   return (
@@ -17,11 +15,12 @@ export default function AddStudent({ visible }: AddStudentProps) {
       <form
         onSubmit={(ev) => {
           ev.preventDefault();
-          addStudent(password, name)
-            .then((res) =>
-              setFeedback(`Record created for student '${name}' with ID ${res.studentID}`),
-            )
-            .catch((err) => setFeedback(`${err}`));
+          try {
+            const res = addStudent(name);
+            setFeedback(`Record created for student '${name}' with ID ${res.studentID}`);
+          } catch (err) {
+            setFeedback(`${err}`);
+          }
         }}
       >
         <label htmlFor="studentName">Enter new student's name:</label>
