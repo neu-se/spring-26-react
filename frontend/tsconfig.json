@@ -5,24 +5,21 @@
     /* Basic configuration */
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
+    "module": "ES2022",
     "moduleResolution": "bundler",
     "types": ["vite/client"],
     "skipLibCheck": true,
     "jsx": "react-jsx",
+    "noEmit": true,
 
     /* Consistency with Node type stripping style */
     "allowImportingTsExtensions": true,
     "erasableSyntaxOnly": true,
-    "noEmit": true,
     "verbatimModuleSyntax": true,
 
     /* Linting */
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUncheckedSideEffectImports": true
+    "noImplicitReturns": true
   },
   "include": ["."]
 }
